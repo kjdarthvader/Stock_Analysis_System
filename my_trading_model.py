@@ -98,3 +98,41 @@ def analyze_sentiment(news_articles):
 sentiment_scores = analyze_sentiment(news_articles)
 print(sentiment_scores)
 
+# Part 5 - RNN
+
+from sklearn.preprocessing import MinMaxScaler
+from keras.models import Sequential
+from keras.layers import Dense, LSTM
+
+# Data preparation for RNN
+def prepare_data(data, n_features):
+    data = data[['Close']].values
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    scaled_data = scaler.fit_transform(data)
+
+    X_train = []
+    y_train = []
+
+    for i in range(n_features, len(scaled_data)):
+        X_train.append(scaled_data[i - n_features:i, 0])
+        y_train.append(scaled_data[i, 0])
+
+    X_train, y_train = np.array(X_train), np.array(y_train)
+    X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+    
+    return X_train, y_train, scaler
+
+# Number of previous days to use for prediction
+n_features = 60
+X_train, y_train, scaler = prepare_data(stock_data, n_features)
+
+# Building the LSTM model
+model = Sequential()
+model.add(LSTM(units=50, return_sequences=True, input_shape=(X_train.shape[1], 1)))
+model.add(LSTM(units=50))
+model.add(Dense(1))
+
+model.compile(optimizer='adam', loss='mean_squared_error')
+
+# Training the model
+model.fit(X_train, y_train, epochs=100, batch_size=32)
