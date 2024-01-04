@@ -53,4 +53,48 @@ stock_data['MACD'], stock_data['MACD_signal'], stock_data['MACD_hist'] = talib.M
 # Display the first few rows with the new indicators
 print(stock_data[['Close', 'SMA_20', 'SMA_50', 'EMA_20', 'EMA_50', 'RSI', 'MACD', 'MACD_signal', 'MACD_hist']].head())
 
+# Part 4 - Sentiment Analysis 
+import requests
+from bs4 import BeautifulSoup
+
+def scrape_yahoo_news(ticker):
+    # Yahoo News URL for the stock
+    url = f"https://news.yahoo.com/stock/{ticker}"
+
+    # Send a request to the URL
+    response = requests.get(url)
+    page_content = response.content
+
+    # Parse the content with BeautifulSoup
+    soup = BeautifulSoup(page_content, 'html.parser')
+
+    # Find all news articles - Adjust the selector as per the website's structure
+    articles = soup.find_all('article')
+    
+    # Extract and return article headlines and URLs (as an example)
+    news_data = []
+    for article in articles:
+        headline = article.find('h3').get_text()  # Adjust the tag and class based on actual structure
+        link = article.find('a')['href']  # Adjust the tag and class based on actual structure
+        news_data.append((headline, link))
+
+    return news_data
+
+# Example usage
+ticker = 'AAPL'  # Apple Inc. as an example
+news_articles = scrape_yahoo_news(ticker)
+print(news_articles[:5])  # Print first 5 articles
+
+from textblob import TextBlob
+
+def analyze_sentiment(news_articles):
+    sentiment_scores = []
+    for headline, link in news_articles:
+        analysis = TextBlob(headline)
+        sentiment_scores.append(analysis.sentiment.polarity)  # Polarity score
+    return sentiment_scores
+
+# Analyze the sentiment of the news headlines
+sentiment_scores = analyze_sentiment(news_articles)
+print(sentiment_scores)
 
