@@ -136,3 +136,37 @@ model.compile(optimizer='adam', loss='mean_squared_error')
 
 # Training the model
 model.fit(X_train, y_train, epochs=100, batch_size=32)
+
+# Part 6 - Confidence Score Calculation 
+def calculate_confidence_score(stock_data, sentiment_scores, rnn_model, scaler, n_features):
+    # Get the latest technical indicators
+    latest_data = stock_data.iloc[-n_features:]
+    latest_close_prices = latest_data['Close'].values.reshape(-1, 1)
+    scaled_data = scaler.transform(latest_close_prices)
+    X_test = np.array([scaled_data])
+    X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+    # RNN prediction
+    predicted_price = rnn_model.predict(X_test)
+    predicted_price = scaler.inverse_transform(predicted_price)
+
+    # Get the latest RSI and MACD
+    latest_rsi = latest_data['RSI'].iloc[-1]
+    latest_macd = latest_data['MACD'].iloc[-1]
+
+    # Normalize these values (example normalization, can be adjusted)
+    rsi_score = (latest_rsi / 100.0)  # Assuming RSI ranges from 0 to 100
+    macd_score = (latest_macd + 1) / 2  # Assuming MACD ranges from -1 to 1
+
+    # Average sentiment score
+    avg_sentiment_score = np.mean(sentiment_scores)
+
+    # Combine scores from RSI, MACD, sentiment, and RNN prediction
+    # Adjust weights if necessary
+    total_score = (rsi_score + macd_score + avg_sentiment_score + (predicted_price[0][0] / latest_close_prices[-1])) / 4
+
+    return total_score
+
+# Example usage
+confidence_score = calculate_confidence_score(stock_data, sentiment_scores, model, scaler, n_features)
+print("Confidence Score for the stock:", confidence_score)
