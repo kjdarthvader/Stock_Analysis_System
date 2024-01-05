@@ -30,7 +30,13 @@ To set up this project, clone the repository and install the necessary dependenc
   ```
 ```bash
   pip install pandas numpy yfinance talib requests beautifulsoup4 textblob keras tensorflow scikit-learn
-  ```    
+  ```
+
+## Testing 
+The **unittest.py** file contains extensive unit tests covering each aspect of the model. Run these tests to verify the integrity and accuracy of the system:
+```bash
+  python unittest.py
+  ```
 ## Results & Observations
 Through rigorous testing and simulation, the model has demonstrated promising capabilities:
 
