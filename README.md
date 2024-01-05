@@ -23,6 +23,14 @@ This project leverages several technologies and libraries, including:
 - **Keras & TensorFlow:** For building and training the LSTM neural network model.
 - **Scikit-Learn:** Specifically, the MinMaxScaler for data normalization.
 
+## Installation
+To set up this project, clone the repository and install the necessary dependencies:
+```bash
+  git clone https://github.com/kjdarthvader/Stock_Analysis_System.git
+  ```
+```bash
+  pip install pandas numpy yfinance talib requests beautifulsoup4 textblob keras tensorflow scikit-learn
+  ```    
 ## Results & Observations
 Through rigorous testing and simulation, the model has demonstrated promising capabilities:
 
