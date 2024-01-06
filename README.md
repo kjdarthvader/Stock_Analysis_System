@@ -37,6 +37,11 @@ The **unittest.py** file contains extensive unit tests covering each aspect of t
 ```bash
   python unittest.py
   ```
+
+## Flowchart 
+
+![image](https://github.com/kjdarthvader/Stock_Analysis_System/blob/main/SAS_Technical_Flowchart.png)
+
 ## Results & Observations
 Through rigorous testing and simulation, the model has demonstrated promising capabilities:
 
